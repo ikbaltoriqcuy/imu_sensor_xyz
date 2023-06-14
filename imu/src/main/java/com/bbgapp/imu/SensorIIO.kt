@@ -1,6 +1,9 @@
 package com.bbgapp.imu
 
+import com.bbgapp.imu.data.Position
 import java.io.File
+import kotlin.math.atan
+import kotlin.math.atan2
 
 /**
  Created by ikbaltoriq on 21,June,2023
@@ -27,7 +30,9 @@ object SensorIIO {
     private const val MAGNETIC_FIELD_FILE_Y = "/in_magn_y_raw"
     private const val MAGNETIC_FIELD_FILE_Z = "/in_magn_z_raw"
 
-    fun getValueAcceleromter(): Triple<Float, Float, Float> {
+    private const val MILLI_GAUSS = 0.48828125 * 1000
+
+    fun getAcceleromter(): Position {
         var scale = 0.0f
         val scaleText = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$ACCELEROMETER_FILE_SCALE"))
         var x = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$ACCELEROMETER_FILE_X"))
@@ -39,10 +44,10 @@ object SensorIIO {
         y = y.ifEmpty { "0" }
         z = z.ifEmpty { "0" }
 
-        return Triple(x.toInt() * scale , y.toInt() * scale, z.toInt() * scale)
+        return Position(x.toInt() * scale , y.toInt() * scale, z.toInt() * scale)
     }
 
-    fun getValueGyroscope(): Triple<Float, Float, Float> {
+    fun getGyroscope(): Position {
         var scale = 0.0f
         val scaleText = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$GYROSCOPE_FILE_SCALE"))
         var x = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$GYROSCOPE_FILE_X"))
@@ -54,10 +59,10 @@ object SensorIIO {
         y = y.ifEmpty { "0" }
         z = z.ifEmpty { "0" }
 
-        return Triple(x.toInt() * scale , y.toInt() * scale, z.toInt() * scale)
+        return Position(x.toInt() * scale , y.toInt() * scale, z.toInt() * scale)
     }
 
-    fun getValueMagnetometer(): Triple<Float, Float, Float> {
+    fun getMagnetometer(): Position {
         var scale = 0.0f
         val scaleText = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_2$MAGNETIC_FIELD_FILE_SCALE"))
         var x = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_2$MAGNETIC_FIELD_FILE_X"))
@@ -69,7 +74,17 @@ object SensorIIO {
         y = y.ifEmpty { "0" }
         z = z.ifEmpty { "0" }
 
-        return Triple(x.toInt() * scale , y.toInt() * scale, z.toInt() * scale)
+        return Position(x.toInt() * scale , y.toInt() * scale, z.toInt() * scale)
+    }
+
+    fun getValueDirection(): Int {
+        val position = getMagnetometer()
+        val compassHeading = atan2(position.y , position.x ) * (180 / Math.PI)
+        return when {
+            (compassHeading.toInt() > 360) -> compassHeading.minus(360f).toInt()
+            (compassHeading.toInt() < 360) -> compassHeading.plus(360f).toInt()
+            else -> compassHeading.toInt()
+        }
     }
 
 }

@@ -42,9 +42,9 @@ class MainActivity : AppCompatActivity() {
         /** Print ACCELEROMETER **/
         coroutineScope.launch {
             while (true) {
-                val x = SensorIIO.getValueAcceleromter().first
-                val y = SensorIIO.getValueAcceleromter().second
-                val z = SensorIIO.getValueAcceleromter().third
+                val x = SensorIIO.getAcceleromter().x
+                val y = SensorIIO.getAcceleromter().y
+                val z = SensorIIO.getAcceleromter().z
 
                 tv_accelerometer.text = "$SENSOR_ACCELEROMETER \n" +
                         "\tx : $x \n" +
@@ -58,15 +58,14 @@ class MainActivity : AppCompatActivity() {
         /** Print GYROSCOPE **/
         coroutineScope.launch {
             while (true) {
-                val x = SensorIIO.getValueGyroscope().first
-                val y = SensorIIO.getValueGyroscope().second
-                val z = SensorIIO.getValueGyroscope().third
+                val x = SensorIIO.getGyroscope().x
+                val y = SensorIIO.getGyroscope().y
+                val z = SensorIIO.getGyroscope().z
 
                 tv_gyroscope.text = "$SENSOR_GYROSCOPE \n" +
                         "\tx : $x \n" +
                         "\ty : $y \n" +
                         "\tz : $z \n"
-
                 delay(100)
             }
         }
@@ -74,15 +73,16 @@ class MainActivity : AppCompatActivity() {
         /** Print MAGNETIC_FIELD **/
         coroutineScope.launch {
             while (true) {
-                val x = SensorIIO.getValueMagnetometer().first
-                val y = SensorIIO.getValueMagnetometer().second
-                val z = SensorIIO.getValueMagnetometer().third
+                val x = SensorIIO.getMagnetometer().x
+                val y = SensorIIO.getMagnetometer().y
+                val z = SensorIIO.getMagnetometer().z
 
+                val compassHeading = SensorIIO.getValueDirection()
                 tv_magnetometer.text = "$SENSOR_MAGNETIC_FIELD \n" +
                         "\tx : $x \n" +
                         "\ty : $y \n" +
-                        "\tz : $z \n"
-
+                        "\tz : $z \n" +
+                        "\tValue Direction: $compassHeading\n"
                 delay(100)
             }
         }
