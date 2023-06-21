@@ -41,12 +41,16 @@ class MainActivity : AppCompatActivity() {
         /** Print ACCELEROMETER **/
         coroutineScope.launch {
             while (true) {
-                var scale = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$ACCELEROMETER_FILE_SCALE"))
-                val x = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$ACCELEROMETER_FILE_X"))
-                val y = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$ACCELEROMETER_FILE_Y"))
-                val z = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$ACCELEROMETER_FILE_Z"))
+                val fileScale = File("$ROOT_PATH$PATH_DEVICE_1$ACCELEROMETER_FILE_SCALE")
+                var scale = FileReader.readFileContent(fileScale)
+                var x = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$ACCELEROMETER_FILE_X"))
+                var y = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$ACCELEROMETER_FILE_Y"))
+                var z = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$ACCELEROMETER_FILE_Z"))
 
-                scale = scale.ifEmpty { "1" }
+                x = x.ifEmpty { "0" }
+                y = y.ifEmpty { "0" }
+                z = z.ifEmpty { "0" }
+                scale = scale.split(" ")[0].ifEmpty { "0" }
 
                 tv_accelerometer.text = "$SENSOR_ACCELEROMETER \n" +
                         "\tx : ${x.toInt() * scale.toFloat()} \n" +
@@ -61,11 +65,14 @@ class MainActivity : AppCompatActivity() {
         coroutineScope.launch {
             while (true) {
                 var scale = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$GYROSCOPE_FILE_SCALE"))
-                val x = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$GYROSCOPE_FILE_X"))
-                val y = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$GYROSCOPE_FILE_Y"))
-                val z = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$GYROSCOPE_FILE_Z"))
+                var x = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$GYROSCOPE_FILE_X"))
+                var y = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$GYROSCOPE_FILE_Y"))
+                var z = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$GYROSCOPE_FILE_Z"))
 
-                scale = scale.ifEmpty { "1" }
+                x = x.ifEmpty { "0" }
+                y = y.ifEmpty { "0" }
+                z = z.ifEmpty { "0" }
+                scale = scale.split(" ")[0].ifEmpty { "0" }
 
                 tv_gyroscope.text = "$SENSOR_GYROSCOPE \n" +
                         "\tx : ${x.toInt() * scale.toFloat()} \n" +
@@ -80,11 +87,14 @@ class MainActivity : AppCompatActivity() {
         coroutineScope.launch {
             while (true) {
                 var scale = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_2$MAGNETIC_FIELD_FILE_SCALE"))
-                val x = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_2$MAGNETIC_FIELD_FILE_X"))
-                val y = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_2$MAGNETIC_FIELD_FILE_Y"))
-                val z = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_2$MAGNETIC_FIELD_FILE_Z"))
+                var x = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_2$MAGNETIC_FIELD_FILE_X"))
+                var y = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_2$MAGNETIC_FIELD_FILE_Y"))
+                var z = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_2$MAGNETIC_FIELD_FILE_Z"))
 
-                scale = scale.ifEmpty { "1" }
+                x = x.ifEmpty { "0" }
+                y = y.ifEmpty { "0" }
+                z = z.ifEmpty { "0" }
+                scale = scale.ifEmpty { "0" }
 
                 tv_magnetometer.text = "$SENSOR_MAGNETIC_FIELD \n" +
                         "\tx : ${x.toInt() * scale.toFloat()} \n" +
@@ -118,12 +128,12 @@ class MainActivity : AppCompatActivity() {
         private const val PATH_DEVICE_1 = "/iio:device1"
         private const val PATH_DEVICE_2 = "/iio:device2"
 
-        private const val ACCELEROMETER_FILE_SCALE = "/in_accel_scale"
+        private const val ACCELEROMETER_FILE_SCALE = "/in_accel_scale_available"
         private const val ACCELEROMETER_FILE_X = "/in_accel_x_raw"
         private const val ACCELEROMETER_FILE_Y = "/in_accel_y_raw"
         private const val ACCELEROMETER_FILE_Z = "/in_accel_z_raw"
 
-        private const val GYROSCOPE_FILE_SCALE = "/in_anglvel_scale"
+        private const val GYROSCOPE_FILE_SCALE = "/in_anglvel_scale_available"
         private const val GYROSCOPE_FILE_X = "/in_anglvel_x_raw"
         private const val GYROSCOPE_FILE_Y = "/in_anglvel_y_raw"
         private const val GYROSCOPE_FILE_Z = "/in_anglvel_z_raw"
