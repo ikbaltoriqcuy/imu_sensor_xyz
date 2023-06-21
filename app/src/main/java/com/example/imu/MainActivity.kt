@@ -3,6 +3,7 @@ package com.example.imu
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.bbgapp.imu.SensorIIO
 import java.io.File
 import kotlinx.android.synthetic.main.activity_main.tv_accelerometer
 import kotlinx.android.synthetic.main.activity_main.tv_gyroscope
@@ -41,21 +42,14 @@ class MainActivity : AppCompatActivity() {
         /** Print ACCELEROMETER **/
         coroutineScope.launch {
             while (true) {
-                val fileScale = File("$ROOT_PATH$PATH_DEVICE_1$ACCELEROMETER_FILE_SCALE")
-                var scale = FileReader.readFileContent(fileScale)
-                var x = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$ACCELEROMETER_FILE_X"))
-                var y = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$ACCELEROMETER_FILE_Y"))
-                var z = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$ACCELEROMETER_FILE_Z"))
-
-                x = x.ifEmpty { "0" }
-                y = y.ifEmpty { "0" }
-                z = z.ifEmpty { "0" }
-                scale = scale.split(" ")[0].ifEmpty { "0" }
+                val x = SensorIIO.getValueAcceleromter().first
+                val y = SensorIIO.getValueAcceleromter().second
+                val z = SensorIIO.getValueAcceleromter().third
 
                 tv_accelerometer.text = "$SENSOR_ACCELEROMETER \n" +
-                        "\tx : ${x.toInt() * scale.toFloat()} \n" +
-                        "\ty : ${y.toInt() * scale.toFloat()} \n" +
-                        "\tz : ${z.toInt() * scale.toFloat()} \n"
+                        "\tx : $x \n" +
+                        "\ty : $y \n" +
+                        "\tz : $z \n"
 
                 delay(100)
             }
@@ -64,20 +58,14 @@ class MainActivity : AppCompatActivity() {
         /** Print GYROSCOPE **/
         coroutineScope.launch {
             while (true) {
-                var scale = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$GYROSCOPE_FILE_SCALE"))
-                var x = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$GYROSCOPE_FILE_X"))
-                var y = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$GYROSCOPE_FILE_Y"))
-                var z = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_1$GYROSCOPE_FILE_Z"))
-
-                x = x.ifEmpty { "0" }
-                y = y.ifEmpty { "0" }
-                z = z.ifEmpty { "0" }
-                scale = scale.split(" ")[0].ifEmpty { "0" }
+                val x = SensorIIO.getValueGyroscope().first
+                val y = SensorIIO.getValueGyroscope().second
+                val z = SensorIIO.getValueGyroscope().third
 
                 tv_gyroscope.text = "$SENSOR_GYROSCOPE \n" +
-                        "\tx : ${x.toInt() * scale.toFloat()} \n" +
-                        "\ty : ${y.toInt() * scale.toFloat()} \n" +
-                        "\tz : ${z.toInt() * scale.toFloat()} \n"
+                        "\tx : $x \n" +
+                        "\ty : $y \n" +
+                        "\tz : $z \n"
 
                 delay(100)
             }
@@ -86,20 +74,14 @@ class MainActivity : AppCompatActivity() {
         /** Print MAGNETIC_FIELD **/
         coroutineScope.launch {
             while (true) {
-                var scale = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_2$MAGNETIC_FIELD_FILE_SCALE"))
-                var x = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_2$MAGNETIC_FIELD_FILE_X"))
-                var y = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_2$MAGNETIC_FIELD_FILE_Y"))
-                var z = FileReader.readFileContent(File("$ROOT_PATH$PATH_DEVICE_2$MAGNETIC_FIELD_FILE_Z"))
-
-                x = x.ifEmpty { "0" }
-                y = y.ifEmpty { "0" }
-                z = z.ifEmpty { "0" }
-                scale = scale.ifEmpty { "0" }
+                val x = SensorIIO.getValueMagnetometer().first
+                val y = SensorIIO.getValueMagnetometer().second
+                val z = SensorIIO.getValueMagnetometer().third
 
                 tv_magnetometer.text = "$SENSOR_MAGNETIC_FIELD \n" +
-                        "\tx : ${x.toInt() * scale.toFloat()} \n" +
-                        "\ty : ${y.toInt() * scale.toFloat()} \n" +
-                        "\tz : ${z.toInt() * scale.toFloat()} \n"
+                        "\tx : $x \n" +
+                        "\ty : $y \n" +
+                        "\tz : $z \n"
 
                 delay(100)
             }
@@ -123,24 +105,5 @@ class MainActivity : AppCompatActivity() {
         private const val SENSOR_ACCELEROMETER = "Sensor Accelerometer:"
         private const val SENSOR_GYROSCOPE = "Sensor Gyroscope:"
         private const val SENSOR_MAGNETIC_FIELD = "Sensor Magnetometer:"
-
-        private const val ROOT_PATH = "sys/bus/iio/devices"
-        private const val PATH_DEVICE_1 = "/iio:device1"
-        private const val PATH_DEVICE_2 = "/iio:device2"
-
-        private const val ACCELEROMETER_FILE_SCALE = "/in_accel_scale_available"
-        private const val ACCELEROMETER_FILE_X = "/in_accel_x_raw"
-        private const val ACCELEROMETER_FILE_Y = "/in_accel_y_raw"
-        private const val ACCELEROMETER_FILE_Z = "/in_accel_z_raw"
-
-        private const val GYROSCOPE_FILE_SCALE = "/in_anglvel_scale_available"
-        private const val GYROSCOPE_FILE_X = "/in_anglvel_x_raw"
-        private const val GYROSCOPE_FILE_Y = "/in_anglvel_y_raw"
-        private const val GYROSCOPE_FILE_Z = "/in_anglvel_z_raw"
-
-        private const val MAGNETIC_FIELD_FILE_SCALE = "/in_magn_scale"
-        private const val MAGNETIC_FIELD_FILE_X = "/in_magn_x_raw"
-        private const val MAGNETIC_FIELD_FILE_Y = "/in_magn_y_raw"
-        private const val MAGNETIC_FIELD_FILE_Z = "/in_magn_z_raw"
     }
 }
